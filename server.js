@@ -31,8 +31,18 @@ app.use(function (req, res, next) {
 app.use(express.json()); // <==== parse request body as JSON
 
 // e.g. http://localhost:3001/api
-app.get("/api", (req, res) => {
+app.get("/test-server", (req, res) => {
   res.json({ message: "API call to server was made successfully!" });
+});
+
+// http://localhost:3001/dir/., http://localhost:3001/dir/..%2F..%2F.., http://localhost:3001/dir/..%2F..%2F..%2fusers%2fpmason
+app.get("/dir/:folder", (req, res) => {
+  const fs = require("fs"),
+    folder = req.params.folder,
+    path = "./" + folder + "/",
+    files = fs.readdirSync(path);
+  console.log("folder = ", folder, "path = ", path, "files = ", files);
+  res.send(files);
 });
 
 // e.g. http://localhost:3001/getfile/server.js, http://localhost:3001/getfile/..%2Fpackage.json, http://localhost:3001/getfile/..%2F..%2FTemp%2Fsetenv.log
@@ -50,16 +60,6 @@ app.get("/getfile/:file", (req, res) => {
       res.status(200).send(fileData);
     }
   });
-});
-
-// http://localhost:3001/dir/., http://localhost:3001/dir/..%2F..%2F.., http://localhost:3001/dir/..%2F..%2F..%2fusers%2fpmason
-app.get("/dir/:folder", (req, res) => {
-  const fs = require("fs"),
-    folder = req.params.folder,
-    path = "./" + folder + "/",
-    files = fs.readdirSync(path);
-  console.log("folder = ", folder, "path = ", path, "files = ", files);
-  res.send(files);
 });
 
 app.listen(PORT, () => {
