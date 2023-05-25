@@ -12,6 +12,7 @@
   "dependencies": {
     "basic-ftp": "^5.0.2",
     "express": "^4.17.1",
-    "glob": "^9.3.2"
+    "glob": "^9.3.2",
+    "nodemailer": "^6.9.2"
   }
 }
