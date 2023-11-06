@@ -26,10 +26,27 @@ app.get("/test-server", (req, res) => {
 
 // http://localhost:3001/dir/., http://localhost:3001/dir/..%2F..%2F.., http://localhost:3001/dir/..%2F..%2F..%2fusers%2fpmason
 app.get("/dir/:folder", (req, res) => {
+  console.log(req);
   const folder = req.params.folder,
-    files = fs.readdirSync(folder);
-  console.log("folder = ", folder, "files = ", files);
-  res.send(files);
+    fileObjects = fs.readdirSync(folder, { withFileTypes: true });
+  const files = [],
+    dirs = [];
+  fileObjects.forEach((item) => {
+    if (!item.isDirectory()) {
+      files.push(item.name);
+    } else {
+      dirs.push(item.name);
+    }
+  });
+  console.log(
+    "fileObjects=",
+    fileObjects,
+    "folder = ",
+    folder,
+    "files = ",
+    files
+  );
+  res.send({ dirs: dirs, files: files });
 });
 
 // e.g. http://localhost:3001/getfile/server.js, http://localhost:3001/getfile/..%2Fpackage.json, http://localhost:3001/getfile/..%2F..%2FTemp%2Fsetenv.log
